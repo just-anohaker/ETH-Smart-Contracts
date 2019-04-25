@@ -188,7 +188,7 @@ contract AdministratorRole {
     }
 
     modifier onlyUnlocker() {
-        require(!isLocker(msg.sender), "AdministratorRole: caller is not a locker");
+        require(!isLocker(msg.sender), "AdministratorRole: caller is a locker");
         _;
     }
 
