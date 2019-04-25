@@ -340,7 +340,7 @@ contract ERC20 is IERC20, AdministratorRole, Pausable {
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 value) public whenNotPaused lockerExists(from) returns (bool) {
+    function transferFrom(address from, address to, uint256 value) public whenNotPaused lockerNotExists(from) returns (bool) {
         _transfer(from, to, value);
         _approve(from, msg.sender, _allowed[from][msg.sender].sub(value));
         return true;
