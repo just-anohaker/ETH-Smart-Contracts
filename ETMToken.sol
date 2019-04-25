@@ -167,11 +167,6 @@ contract AdministratorRole {
         return msg.sender == _admin;
     }
 
-    function renounceAdministrator() public onlyAdministrator {
-        emit AdministractorTransfered(_admin, address(0));
-        _admin = address(0);
-    }
-
     function transferAdministrator(address newAdmin) public onlyAdministrator {
         _transferAdministrator(newAdmin);
     }
@@ -247,11 +242,6 @@ contract Ownable {
 
     function isOwner() public view returns (bool) {
         return msg.sender == _owner;
-    }
-
-    function renounceOwnership() public onlyOwner {
-        emit OwnershipTransferred(_owner, address(0));
-        _owner = address(0);
     }
 
     function transferOwnership(address newOwner) public onlyOwner {
