@@ -58,46 +58,6 @@ library Roles {
     }
 }
 
-contract MinterRole {
-    using Roles for Roles.Role;
-
-    event MinterAdded(address indexed account);
-    event MinterRemoved(address indexed account);
-
-    Roles.Role private _minters;
-
-    constructor() internal {
-        _addMinter(msg.sender);
-    }
-
-    modifier onlyMinter() {
-        require(isMinter(msg.sender), "MinterRole: caller does not have the Minter role");
-        _;
-    }
-
-    function isMinter(address account) public view returns (bool) {
-        return _minters.has(account);
-    }
-
-    function addMinter(address account) public onlyMinter {
-        _addMinter(account);
-    }
-
-    function renounceMinter() public {
-        _removeMinter(msg.sender);
-    }
-
-    function _addMinter(address account) internal {
-        _minters.add(account);
-        emit MinterAdded(account);
-    }
-
-    function _removeMinter(address account) internal {
-        _minters.remove(account);
-        emit MinterRemoved(account);
-    }
-}
-
 contract PauserRole {
     using Roles for Roles.Role;
 
@@ -340,7 +300,7 @@ contract ERC20 is IERC20, AdministratorRole, Pausable {
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 value) public whenNotPaused lockerNotExists(from) returns (bool) {
+    function transferFrom(address from, address to, uint256 value) public whenNotPaused lockerExists(from) returns (bool) {
         _transfer(from, to, value);
         _approve(from, msg.sender, _allowed[from][msg.sender].sub(value));
         return true;
@@ -404,14 +364,7 @@ contract ERC20Detailed is IERC20 {
     }
 }
 
-contract ERC20Mintable is ERC20, MinterRole {
-    function mint(address to, uint256 value) public onlyMinter returns (bool) {
-        _mint(to, value);
-        return true;
-    }
-}
-
-contract ETMToken is Ownable, ERC20Detailed, ERC20, ERC20Mintable {
+contract ETMToken is Ownable, ERC20Detailed, ERC20 {
     using SafeMath for uint256;
 
     uint8 public constant DECIMALS = 18;
