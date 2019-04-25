@@ -412,8 +412,10 @@ contract ERC20Mintable is ERC20, MinterRole {
 }
 
 contract ETMToken is Ownable, ERC20Detailed, ERC20, ERC20Mintable {
+    using SafeMath for uint256;
+
     uint8 public constant DECIMALS = 18;
-    uint256 private INIT_SUPPLY = 0;
+    uint256 private INIT_SUPPLY = uint256(210000000).mul(10 ** uint256(DECIMALS));
     bool private _destoried = false;
 
     constructor() public ERC20Detailed("EnTanMo", "ETM", DECIMALS) {
